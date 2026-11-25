@@ -1,0 +1,8 @@
+data/raw/*.csv
+olist_dbt/target/
+olist_dbt/dbt_packages/
+olist_dbt/logs/
+logs/
+__pycache__/
+.venv/
+.DS_Store

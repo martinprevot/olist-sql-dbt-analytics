@@ -1,0 +1,17 @@
+version: 2
+
+sources:
+  - name: olist
+    schema: raw
+    description: Raw copy of the Olist public datasets, every column as text.
+    tables:
+      - name: orders
+      - name: order_items
+      - name: order_payments
+      - name: order_reviews
+      - name: customers
+      - name: products
+      - name: sellers
+      - name: category_translation
+      - name: marketing_qualified_leads
+      - name: closed_deals

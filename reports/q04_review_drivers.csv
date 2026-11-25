@@ -1,0 +1,8 @@
+driver,value,orders,avg_review,bad_review_rate
+freight_ratio,1. frais de port < 15 %,29108,4.18,0.127
+freight_ratio,2. 15-30 %,33471,4.15,0.128
+freight_ratio,3. > 30 %,33891,4.10,0.139
+lateness,à l'heure,89936,4.28,0.095
+lateness,en retard,6534,2.26,0.629
+seller_mix,mono-vendeur,95195,4.16,0.127
+seller_mix,multi-vendeurs,1275,2.84,0.477

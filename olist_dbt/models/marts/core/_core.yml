@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: >
+      One row per order with value, payment, delivery performance, review
+      and position in the customer's journey. Central fact table.
+    columns:
+      - name: order_id
+        tests: [unique, not_null]
+      - name: customer_unique_id
+        tests: [not_null]
+      - name: customer_order_seq
+        tests:
+          - accepted_range:
+              arguments: {min_value: 1}
+      - name: review_score
+        tests:
+          - accepted_range:
+              arguments: {min_value: 1, max_value: 5}
+  - name: fct_order_items
+    description: One row per order line, with product category and seller.
+    tests:
+      - unique_combination:
+          arguments: {columns: [order_id, order_item_seq]}
+  - name: dim_customers
+    description: One row per real customer (customer_unique_id).
+    columns:
+      - name: customer_unique_id
+        tests: [unique, not_null]
+      - name: order_count
+        tests:
+          - accepted_range:
+              arguments: {min_value: 1}
+  - name: dim_sellers
+    columns:
+      - name: seller_id
+        tests: [unique, not_null]
+
+  - name: dim_products
+    columns:
+      - name: product_id
+        tests: [unique, not_null]
+
+  - name: dim_date
+    columns:
+      - name: date_day
+        tests: [unique, not_null]

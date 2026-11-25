@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: mart_monthly_kpis
+    description: Monthly KPIs (orders, GMV, AOV, new customers, satisfaction, delivery) with MoM growth.
+    columns:
+      - name: month
+        tests: [unique, not_null]
+      - name: late_delivery_rate
+        tests:
+          - accepted_range:
+              arguments: {min_value: 0, max_value: 1}
+
+  - name: mart_cohort_retention
+    description: Retention of monthly acquisition cohorts.
+    tests:
+      - unique_combination:
+          arguments: {columns: [cohort_month, months_since_first]}
+    columns:
+      - name: retention_rate
+        tests:
+          - accepted_range:
+              arguments: {min_value: 0, max_value: 1}
+
+  - name: mart_customer_rfm
+    description: RFM scores and actionable segments per customer.
+    columns:
+      - name: customer_unique_id
+        tests: [unique, not_null]
+      - name: segment
+        tests: [not_null]
+
+  - name: mart_delivery_performance
+    description: Delivery speed, lateness and reviews by state and by delay bucket (GROUPING SETS).
+
+  - name: mart_seller_scorecard
+    description: Revenue, satisfaction and lateness per seller, with rank, Pareto share and tier.
+    columns:
+      - name: seller_id
+        tests: [unique, not_null]
+
+  - name: mart_category_performance
+    description: Revenue, share, price, satisfaction and year-over-year growth per category.
+    columns:
+      - name: category
+        tests: [unique, not_null]
+
+  - name: mart_seller_acquisition_funnel
+    description: MQL -> deal -> active seller funnel by acquisition channel (with a ROLLUP total row).

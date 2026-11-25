@@ -1,0 +1,96 @@
+version: 2
+
+models:
+  - name: stg_olist__orders
+    description: One row per order, typed timestamps.
+    columns:
+      - name: order_id
+        tests: [unique, not_null]
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('stg_olist__customers'), field: customer_id}
+      - name: order_status
+        tests:
+          - accepted_values:
+              arguments:
+                values: [delivered, shipped, canceled, unavailable, invoiced, processing, created, approved]
+
+  - name: stg_olist__order_items
+    description: One row per item line of an order.
+    tests:
+      - unique_combination:
+          arguments:
+            columns: [order_id, order_item_seq]
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - relationships:
+              arguments: {to: ref('stg_olist__orders'), field: order_id}
+      - name: product_id
+        tests:
+          - relationships:
+              arguments: {to: ref('stg_olist__products'), field: product_id}
+      - name: seller_id
+        tests:
+          - relationships:
+              arguments: {to: ref('stg_olist__sellers'), field: seller_id}
+      - name: item_price
+        tests:
+          - accepted_range:
+              arguments: {min_value: 0}
+  - name: stg_olist__order_payments
+    columns:
+      - name: payment_type
+        tests:
+          - accepted_values:
+              arguments:
+                values: [credit_card, boleto, voucher, debit_card, not_defined]
+      - name: payment_value
+        tests:
+          - accepted_range:
+              arguments: {min_value: 0}
+  - name: stg_olist__order_reviews
+    description: One review per order (latest answered when several exist).
+    columns:
+      - name: order_id
+        tests: [unique, not_null]
+      - name: review_score
+        tests:
+          - not_null
+          - accepted_range:
+              arguments: {min_value: 1, max_value: 5}
+  - name: stg_olist__customers
+    columns:
+      - name: customer_id
+        tests: [unique, not_null]
+      - name: customer_unique_id
+        tests: [not_null]
+
+  - name: stg_olist__products
+    columns:
+      - name: product_id
+        tests: [unique, not_null]
+      - name: category
+        tests: [not_null]
+
+  - name: stg_olist__sellers
+    columns:
+      - name: seller_id
+        tests: [unique, not_null]
+
+  - name: stg_olist__marketing_qualified_leads
+    columns:
+      - name: mql_id
+        tests: [unique, not_null]
+
+  - name: stg_olist__closed_deals
+    columns:
+      - name: mql_id
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments: {to: ref('stg_olist__marketing_qualified_leads'), field: mql_id}

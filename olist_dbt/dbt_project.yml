@@ -1,0 +1,32 @@
+name: olist_dbt
+version: "1.0.0"
+config-version: 2
+profile: olist
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  olist_dbt:
+    staging:
+      +materialized: view
+      +schema: staging
+    intermediate:
+      +materialized: view
+      +schema: intermediate
+    marts:
+      +materialized: table
+      core:
+        +schema: core
+      analytics:
+        +schema: analytics
+
+vars:
+  # Analysis window: complete months only (2016 is a ramp-up period with a
+  # few hundred orders, and Sept./Oct. 2018 are truncated in the export).
+  analysis_start: "2017-01-01"
+  analysis_end: "2018-09-01"

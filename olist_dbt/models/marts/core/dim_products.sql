@@ -1,0 +1,2 @@
+select product_id, category, category_pt, photos_qty, weight_g, volume_cm3
+from {{ ref('stg_olist__products') }}
